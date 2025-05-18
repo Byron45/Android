@@ -1,7 +1,6 @@
 package com.example.app_vehiculos.navigation
 
 import androidx.compose.runtime.*
-import androidx.navigation.*
 import androidx.navigation.compose.*
 import com.example.app_vehiculos.model.Usuario
 import com.example.app_vehiculos.model.Vehiculo
@@ -12,7 +11,7 @@ import com.example.app_vehiculos.view.*
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    val usuariosRegistrados = remember {
+    val usuarios = remember {
         mutableStateListOf(
             Usuario("Byron", "Flores"),
             Usuario("Jordi", "Pila"),
@@ -28,27 +27,23 @@ fun AppNavigation() {
         )
     }
 
-    NavHost(navController, startDestination = "login") {
+    var vehiculoSeleccionado by remember { mutableStateOf<Vehiculo?>(null) }
+
+    NavHost(navController = navController, startDestination = "login") {
         composable("login") {
             LoginScreen(
-                usuariosRegistrados = usuariosRegistrados,
-                onLoginSuccess = {
-                    navController.navigate("home") {
-                        popUpTo("login") { inclusive = true }
-                    }
-                },
-                onGoToRegister = {
-                    navController.navigate("register")
-                }
+                usuariosRegistrados = usuarios,
+                onLoginSuccess = { navController.navigate("home") },
+                onGoToRegister = { navController.navigate("register") }
             )
         }
 
         composable("register") {
             RegisterScreen(
-                usuarios = usuariosRegistrados,
+                usuarios = usuarios,
                 onRegisterSuccess = {
-                    usuariosRegistrados.add(it)
-                    navController.popBackStack() // Vuelve al login
+                    usuarios.add(it)
+                    navController.popBackStack()
                 }
             )
         }
@@ -57,17 +52,17 @@ fun AppNavigation() {
             HomeScreen(
                 vehiculos = vehiculos,
                 onLogout = {
-                    navController.navigate("login") {
-                        popUpTo("home") { inclusive = true }
-                    }
+                    navController.popBackStack("login", inclusive = false)
                 },
                 onAddVehiculo = {
                     navController.navigate("addVehiculo")
                 },
+                onEditVehiculo = { vehiculo ->
+                    vehiculoSeleccionado = vehiculo
+                    navController.navigate("editVehiculo")
+                },
                 onDeleteVehiculo = { vehiculo ->
                     vehiculos.remove(vehiculo)
-                },
-                onEditVehiculo = { vehiculo ->
                 }
             )
         }
@@ -83,7 +78,23 @@ fun AppNavigation() {
                 }
             )
         }
+
+        composable("editVehiculo") {
+            vehiculoSeleccionado?.let { vehiculo ->
+                EditVehiculoScreen(
+                    vehiculo = vehiculo,
+                    onSave = { vehiculoEditado ->
+                        val index = vehiculos.indexOfFirst { it.placa == vehiculo.placa }
+                        if (index != -1) {
+                            vehiculos[index] = vehiculoEditado
+                        }
+                        navController.popBackStack()
+                    },
+                    onCancel = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+        }
     }
 }
-
-
