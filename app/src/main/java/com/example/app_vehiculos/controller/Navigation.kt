@@ -6,6 +6,8 @@ import com.example.app_vehiculos.model.Usuario
 import com.example.app_vehiculos.model.Vehiculo
 import com.example.app_vehiculos.R
 import com.example.app_vehiculos.view.*
+import kotlinx.coroutines.delay
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun AppNavigation() {
@@ -15,7 +17,12 @@ fun AppNavigation() {
         mutableStateListOf(
             Usuario("Byron", "Flores"),
             Usuario("Jordi", "Pila"),
-            Usuario("Veyker", "Barrionuevo")
+            Usuario("Veyker", "Barrionuevo"),
+            Usuario("Joffre", "Arias"),
+            Usuario("Edgar", "Tipan"),
+            Usuario("Angelo", "Pujota"),
+            Usuario("Cristian", "Lechon"),
+            Usuario("Kevin", "Hurtado")
         )
     }
 
@@ -29,7 +36,17 @@ fun AppNavigation() {
 
     var vehiculoSeleccionado by remember { mutableStateOf<Vehiculo?>(null) }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "splash") {
+        composable("splash") {
+            SplashScreen()
+            LaunchedEffect(Unit) {
+                delay(2000)
+                navController.navigate("login") {
+                    popUpTo("splash") { inclusive = true }
+                }
+            }
+        }
+
         composable("login") {
             LoginScreen(
                 usuariosRegistrados = usuarios,

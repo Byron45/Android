@@ -5,12 +5,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import com.example.app_vehiculos.model.Vehiculo
+import com.example.app_vehiculos.R
 
 @Composable
 fun HomeScreen(
@@ -50,8 +51,14 @@ fun HomeScreen(
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Column {
+                        val painter = when {
+                        vehiculo.imagenUri != null -> rememberAsyncImagePainter(vehiculo.imagenUri)
+                        vehiculo.imagenResId != null -> painterResource(id = vehiculo.imagenResId)
+                        else -> painterResource(id = R.drawable.toyota)
+                    }
+
                         Image(
-                            painter = painterResource(id = vehiculo.imagenResId),
+                            painter = painter,
                             contentDescription = "Imagen de ${vehiculo.marca}",
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -85,5 +92,3 @@ fun HomeScreen(
         }
     }
 }
-
-

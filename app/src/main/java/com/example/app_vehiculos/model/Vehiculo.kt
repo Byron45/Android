@@ -7,6 +7,7 @@ data class Vehiculo(
     val color: String,
     val costoPorDia: Double,
     val activo: Boolean,
-    val imagenResId: Int
+    val imagenResId: Int? = null,
+    val imagenUri: String? = null
 
 )

@@ -1,27 +1,23 @@
 package com.example.app_vehiculos.view
 
-import android.app.Activity
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.app_vehiculos.R
 import com.example.app_vehiculos.model.Vehiculo
-import java.io.InputStream
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +27,7 @@ fun AddVehiculoScreen(
     vehiculoAEditar: Vehiculo? = null
 ) {
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     var placa by remember { mutableStateOf(vehiculoAEditar?.placa ?: "") }
     var marca by remember { mutableStateOf(vehiculoAEditar?.marca ?: "") }
@@ -38,28 +35,29 @@ fun AddVehiculoScreen(
     var color by remember { mutableStateOf(vehiculoAEditar?.color ?: "") }
     var costoPorDia by remember { mutableStateOf(vehiculoAEditar?.costoPorDia?.toString() ?: "") }
     var activo by remember { mutableStateOf(vehiculoAEditar?.activo ?: true) }
-
     var showErrors by remember { mutableStateOf(false) }
 
-    var imagenUri by remember { mutableStateOf<Uri?>(null) }
+    var imagenUri by remember {
+        mutableStateOf(vehiculoAEditar?.imagenUri?.let { Uri.parse(it) })
+    }
 
-    // Galería launcher
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             imagenUri = uri
         }
     }
 
-    // Validaciones
     val isPlacaValid = placa.isNotBlank()
     val isMarcaValid = marca.isNotBlank()
     val isAnioValid = anio.toIntOrNull() != null
     val isColorValid = color.isNotBlank()
     val isCostoValid = costoPorDia.toDoubleOrNull()?.let { it > 0 } == true
+    val imagenMaxSize = 200.dp
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -124,12 +122,17 @@ fun AddVehiculoScreen(
                 painter = rememberAsyncImagePainter(it),
                 contentDescription = "Imagen seleccionada",
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(imagenMaxSize)
                     .padding(top = 8.dp)
             )
         }
 
-        Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Button(onClick = {
                 showErrors = true
                 if (isPlacaValid && isMarcaValid && isAnioValid && isColorValid && isCostoValid) {
@@ -141,7 +144,8 @@ fun AddVehiculoScreen(
                             color = color,
                             costoPorDia = costoPorDia.toDouble(),
                             activo = activo,
-                            imagenResId = R.drawable.toyota // Puedes cambiar esto si vas a guardar la URI
+                            imagenResId = if (imagenUri == null && vehiculoAEditar?.imagenUri == null) R.drawable.toyota else null,
+                            imagenUri = imagenUri?.toString() ?: vehiculoAEditar?.imagenUri
                         )
                     )
                 }
@@ -153,7 +157,7 @@ fun AddVehiculoScreen(
                 Text("Cancelar")
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
-
-
