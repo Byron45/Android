@@ -40,7 +40,10 @@ fun EditVehiculoScreen(
     val imagenes = mapOf(
         "toyota" to R.drawable.toyota,
         "chevrolet" to R.drawable.chevrolet,
-        "nissan" to R.drawable.nissan
+        "nissan" to R.drawable.nissan,
+        "hyundai" to R.drawable.hyundai,
+        "mazda" to R.drawable.mazda,
+        "preder" to R.drawable.preder
     )
 
     var imagenSeleccionada by remember {
@@ -50,7 +53,10 @@ fun EditVehiculoScreen(
                 vehiculo.imagenResId == R.drawable.toyota -> "toyota"
                 vehiculo.imagenResId == R.drawable.chevrolet -> "chevrolet"
                 vehiculo.imagenResId == R.drawable.nissan -> "nissan"
-                else -> "toyota"
+                vehiculo.imagenResId == R.drawable.hyundai -> "hyundai"
+                vehiculo.imagenResId == R.drawable.mazda -> "mazda"
+                vehiculo.imagenResId == R.drawable.preder -> "preder"
+                else -> "preder"
             }
         )
     }
@@ -100,7 +106,6 @@ fun EditVehiculoScreen(
             Text("Seleccionar imagen de galería")
         }
 
-        // Opción de elegir imagen precargada SOLO si no hay imagen de galería
         if (imagenUri == null) {
             ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
                 OutlinedTextField(
@@ -134,7 +139,7 @@ fun EditVehiculoScreen(
                     modifier = Modifier.size(imagenMaxSize)
                 )
                 imagenSeleccionada.isNotEmpty() -> Image(
-                    painter = painterResource(id = imagenes[imagenSeleccionada] ?: R.drawable.toyota),
+                    painter = painterResource(id = imagenes[imagenSeleccionada] ?: R.drawable.preder),
                     contentDescription = "Imagen precargada",
                     modifier = Modifier.size(imagenMaxSize)
                 )
@@ -146,7 +151,7 @@ fun EditVehiculoScreen(
         Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
             Button(onClick = {
                 val imagenResId = if (imagenUri == null && imagenSeleccionada.isNotEmpty()) {
-                    imagenes[imagenSeleccionada] ?: R.drawable.toyota
+                    imagenes[imagenSeleccionada] ?: R.drawable.preder
                 } else null
 
                 onSave(

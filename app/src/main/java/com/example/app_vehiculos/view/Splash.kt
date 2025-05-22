@@ -50,7 +50,7 @@ fun SplashScreen() {
                 modifier = Modifier.wrapContentHeight()
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.logo2),
+                    painter = painterResource(id = R.drawable.logo),
                     contentDescription = "Logo de la app",
                     modifier = Modifier.size(220.dp)
                 )

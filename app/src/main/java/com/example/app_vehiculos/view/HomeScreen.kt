@@ -52,10 +52,10 @@ fun HomeScreen(
                 ) {
                     Column {
                         val painter = when {
-                        vehiculo.imagenUri != null -> rememberAsyncImagePainter(vehiculo.imagenUri)
-                        vehiculo.imagenResId != null -> painterResource(id = vehiculo.imagenResId)
-                        else -> painterResource(id = R.drawable.toyota)
-                    }
+                            vehiculo.imagenUri != null -> rememberAsyncImagePainter(vehiculo.imagenUri)
+                            vehiculo.imagenResId != null -> painterResource(id = vehiculo.imagenResId)
+                            else -> painterResource(id = R.drawable.toyota)
+                        }
 
                         Image(
                             painter = painter,

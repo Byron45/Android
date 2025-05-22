@@ -29,8 +29,12 @@ fun AppNavigation() {
     val vehiculos = remember {
         mutableStateListOf(
             Vehiculo("ABC123", "Toyota", 2020, "Rojo", 50.0, true, R.drawable.toyota),
-            Vehiculo("XYZ789", "Chevrolet", 2019, "Azul", 45.0, false, R.drawable.chevrolet),
-            Vehiculo("DEF456", "Nissan", 2022, "Blanco", 60.0, true, R.drawable.nissan)
+            Vehiculo("XYZ789", "Chevrolet", 2019, "Negro", 45.0, false, R.drawable.chevrolet),
+            Vehiculo("DEF456", "Nissan", 2022, "Azul", 60.0, true, R.drawable.nissan),
+            Vehiculo("AUC455", "Hyundai", 2025, "Negro", 75.0, true, R.drawable.hyundai),
+            Vehiculo("TIL777", "Mazda", 2018, "Rojo", 35.0, true, R.drawable.mazda)
+
+
         )
     }
 

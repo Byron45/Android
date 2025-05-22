@@ -1,12 +1,15 @@
 package com.example.app_vehiculos.view
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.example.app_vehiculos.R
 import com.example.app_vehiculos.model.Usuario
 
 @Composable
@@ -27,7 +30,15 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Login", style = MaterialTheme.typography.headlineMedium)
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "Logo de la aplicación",
+            modifier = Modifier
+                .size(160.dp)
+                .padding(bottom = 24.dp)
+        )
+
+        Text("Login", style = MaterialTheme.typography.displaySmall)
         Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
@@ -70,8 +81,5 @@ fun LoginScreen(
         TextButton(onClick = onGoToRegister) {
             Text("¿No tienes cuenta? Regístrate")
         }
-
     }
-
 }
-
